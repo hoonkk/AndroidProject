@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="불쾌지수 측정기"
+        android:textSize="50dp"
+        android:layout_marginTop="150dp"
+        android:gravity="center_horizontal"
+        android:fontFamily="@font/bmjua">
+    </TextView>
+    <Button
+        android:id="@+id/btnMeasure"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center_horizontal"
+        android:text="온/습도 측정"
+        android:textSize="30dp"
+        android:fontFamily="@font/bmjua" />
+    <Button
+        android:id="@+id/btnFormula"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center_horizontal"
+        android:text="불쾌지수 공식"
+        android:textSize="30dp"
+        android:fontFamily="@font/bmjua"/>
+    <Button
+        android:id="@+id/btnLog"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center_horizontal"
+        android:text="일지"
+        android:textSize="30dp"
+        android:fontFamily="@font/bmjua"/>
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center_horizontal"
+        android:text="종료"
+        android:textSize="30dp"
+        android:fontFamily="@font/bmjua"/>
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
