@@ -11,5 +11,10 @@
         android:fontWeight="400"
         android:font="@font/misaeng" />
 
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/subfont" />
+
 
 </font-family>

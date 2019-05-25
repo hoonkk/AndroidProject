@@ -1,16 +1,10 @@
 package com.example.thermometerproject;
 
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -40,11 +34,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(v.getId()==R.id.btnFormula)
         {
             Intent intent = new Intent(getApplicationContext(), Formula.class);
-            startActivity(intent);
-        }
-        else if(v.getId()==R.id.btnLog)
-        {
-            Intent intent = new Intent(getApplicationContext(), Calendar.class);
             startActivity(intent);
         }
         else
