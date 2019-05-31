@@ -9,20 +9,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
     <!--타이틀        -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="불쾌지수(THI) 공식"
-        android:textSize="40dp"
-        android:gravity="center_horizontal"
-        android:fontFamily="@font/bmjua">
-    </TextView>
+        android:background="@drawable/titlebar">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="불쾌지수 공식"
+            android:textSize="50dp"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/bmjua"
+            android:textColor="#FFFFFF">
+        </TextView>
+    </LinearLayout>
+
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/fomular"/>
     <TextView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -44,8 +54,9 @@
                 android:layout_marginLeft="20dp"
                 android:layout_width="230dp"
                 android:layout_height="80dp"
-                android:text="\n매우 높음(불쾌지수 80 이상)\n전원 불쾌감을 느낌"
+                android:text="\n매우 높음(불쾌지수 80 이상)\n전원 불쾌감을 느낍니다"
                 android:textSize="20dp"
+                android:textColor="#FC9EBD"
                 android:fontFamily="@font/bmjua"/>
         </LinearLayout>
         <LinearLayout
@@ -57,8 +68,9 @@
                 android:layout_marginLeft="40dp"
                 android:layout_width="230dp"
                 android:layout_height="80dp"
-                android:text="\n높음(불쾌지수 75~79)\n50%정도 불쾌감을 느낌"
+                android:text="\n높음(불쾌지수 75~79)\n50%정도 불쾌감을 느낍니다"
                 android:textSize="20dp"
+                android:textColor="#FFCCCC"
                 android:fontFamily="@font/bmjua"/>
             <ImageView
                 android:layout_width="90dp"
@@ -79,8 +91,9 @@
                 android:layout_marginLeft="20dp"
                 android:layout_width="230dp"
                 android:layout_height="80dp"
-                android:text="\n보통(불쾌지수 68~74)\n불쾌감을 나타내기 시작함"
+                android:text="\n보통(불쾌지수 68~74)\n불쾌감을 나타내기 시작합니다"
                 android:textSize="20dp"
+                android:textColor="#B8F3B8"
                 android:fontFamily="@font/bmjua"/>
         </LinearLayout>
         <LinearLayout
@@ -92,14 +105,35 @@
             android:layout_marginLeft="40dp"
             android:layout_width="230dp"
             android:layout_height="80dp"
-            android:text="\n낮음(불쾌지수 68미만)\n전원 쾌적함을 느낌"
+            android:text="\n낮음(불쾌지수 68미만)\n전원 쾌적함을 느낍니다"
             android:textSize="20dp"
+            android:textColor="#2ED7D2"
             android:fontFamily="@font/bmjua"/>
         <ImageView
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:src="@drawable/happy" />
         </LinearLayout>
+    <LinearLayout
+        android:id="@+id/btnHome2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/all_border">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="#ffffff"
+            android:text="Home"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:fontFamily="@font/misaeng"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/home" />
+    </LinearLayout>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

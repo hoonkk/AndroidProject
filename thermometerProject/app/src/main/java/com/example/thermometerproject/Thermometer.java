@@ -29,11 +29,14 @@ public class Thermometer extends AppCompatActivity implements View.OnClickListen
     ImageView thermometer;
     ImageView humiditymeter;
     ImageView imgConnect;
-    TextView textConnect;
     TextView textV;
     TextView textA;
+    TextView tempText;
+    TextView humText;
     LinearLayout connectMenu;
     LinearLayout sendMenu;
+    LinearLayout homeMenu;
+
     private static final int REQUEST_ENABLE_BT = 10; // 블루투스 활성화 상태
     private BluetoothAdapter bluetoothAdapter; // 블루투스 어댑터
     private Set<BluetoothDevice> devices; // 블루투스 디바이스 데이터 셋
@@ -45,10 +48,9 @@ public class Thermometer extends AppCompatActivity implements View.OnClickListen
     private byte[] readBuffer; // 수신 된 문자열을 저장하기 위한 버퍼
     private int readBufferPosition; // 버퍼 내 문자 저장 위치
     private int pariedDeviceCount; // 페어링 된 Device 숫자 세기
-
-    float temp = 0;  // 받아올 온도 센서 값
-    float hum = 0;  // 받아올 습도 센서 값
-
+    double discomfortIndex = 0;
+    double temp = 0;
+    double hum = 0;
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -57,10 +59,14 @@ public class Thermometer extends AppCompatActivity implements View.OnClickListen
         humiditymeter = (ImageView)findViewById(R.id.humiditymeter);
         textV = (TextView)findViewById(R.id.textV);
         textA = (TextView)findViewById(R.id.texta);
+        tempText = (TextView)findViewById(R.id.tempText);
+        humText = (TextView)findViewById(R.id.humText);
         connectMenu = (LinearLayout)findViewById(R.id.btnConnect);
         sendMenu = (LinearLayout)findViewById(R.id.btnSend);
+        homeMenu = (LinearLayout)findViewById(R.id.btnHome);
         connectMenu.setOnClickListener((View.OnClickListener) this);
         sendMenu.setOnClickListener((View.OnClickListener) this);
+        homeMenu.setOnClickListener((View.OnClickListener) this);
         imgConnect = (ImageView)findViewById(R.id.imgConnect);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); // 기본 어댑터로 설정
         if(bluetoothAdapter == null) // 블루투스 지원하지 않을 때
@@ -109,14 +115,14 @@ public class Thermometer extends AppCompatActivity implements View.OnClickListen
         else {
             // 디바이스를 선택하기 위한 다이얼로그 생성
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("페어링 되어있는 블루투스 디바이스 목록");
+            builder.setTitle("블루투스 모듈과 연결하세요.");
             // 페어링 된 각각의 디바이스의 이름과 주소를 저장
             List<String> list = new ArrayList<>();
             // 모든 디바이스의 이름을 리스트에 추가
             for(BluetoothDevice bluetoothDevice : devices) {
                 list.add(bluetoothDevice.getName());
             }
-            list.add("취소");
+            list.add("나가기");
             // List를 CharSequence 배열로 변경
             final CharSequence[] charSequences = list.toArray(new CharSequence[list.size()]);
             list.toArray(new CharSequence[list.size()]);
@@ -167,12 +173,10 @@ public class Thermometer extends AppCompatActivity implements View.OnClickListen
             workerThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-//                    while(Thread.currentThread().isInterrupted()) {
                         while(true) {
                             try {
                             // 데이터를 수신했는지 확인합니다.
                             int byteAvailable = inputStream.available();
-                            textV.setText(Integer.toString(byteAvailable));
                                 //데이터가 수신 된 경우
                             if(byteAvailable > 0) {
                                 // 입력 스트림에서 바이트 단위로 읽어 옵니다.
@@ -184,21 +188,17 @@ public class Thermometer extends AppCompatActivity implements View.OnClickListen
                                     byte tempByte = bytes[i];
                                     // 개행문자를 기준으로 받음(한줄)
                                     if(tempByte == '\n') {
-
                                         // readBuffer 배열을 encodedBytes로 복사
                                         byte[] encodedBytes = new byte[readBufferPosition];
                                         System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
                                         // 인코딩 된 바이트 배열을 문자열로 변환
                                         final String text = new String(encodedBytes, "US-ASCII");
                                         readBufferPosition = 0;
-
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                // 텍스트 뷰에 출력
-                                                textA.setText(text + "\n");
-                                            }
-                                        });
+                                        String[] textArray = text.split(" "); // 받아온 데이터를 공백을 기준으로 자름
+                                        // 습도 온도 순으로 전송되게 하였으므로 공백을 기준으로 잘라 각각 값을 넣어준다
+                                        hum = Double.parseDouble(textArray[0]);
+                                        temp = Double.parseDouble(textArray[1]);
+//
                                     } // 개행 문자가 아닐 경우
                                     else {
                                         readBuffer[readBufferPosition++] = tempByte;
@@ -223,80 +223,34 @@ public class Thermometer extends AppCompatActivity implements View.OnClickListen
             e.printStackTrace();
         }
     }
-    void sendData(String text) {
-        // 문자열에 개행문자("\n")를 추가해줍니다.
-        text += "\n";
-        try{
-            // 데이터 송신
-            outputStream.write(text.getBytes());
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
 
+    double calculateDiscomfortIndex(double _hum, double _temp)
+    {
+        double _discomfortIndex;
+        double index1 = 9 / 5 * _temp;
+        double index2 = 1 - _hum;
+        double index3 = index1 - 26;
+        double index4 = 55 / 100 * index2;
+        double index5 = index4 * index3;
+        _discomfortIndex = index1 - index5 + 32;
+        return _discomfortIndex;
     }
 
-
-
-//    public void receiveData() {
-//        final Handler handler = new Handler();
-//        // 데이터를 수신하기 위한 버퍼를 생성
-//        readBufferPosition = 0;
-//        readBuffer = new byte[1024];
-//        // 데이터를 수신하기 위한 쓰레드 생성
-//        workerThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                while(Thread.currentThread().isInterrupted()) {
-//                    try {
-//                        // 데이터를 수신했는지 확인합니다.
-//                        int byteAvailable = inputStream.available();
-//                        // 데이터가 수신 된 경우
-//                        if(byteAvailable > 0) {
-//                            // 입력 스트림에서 바이트 단위로 읽어 옵니다.
-//                            byte[] bytes = new byte[byteAvailable];
-//                            inputStream.read(bytes);
-//                            // 입력 스트림 바이트를 한 바이트씩 읽어 옵니다.
-//                            for(int i = 0; i < byteAvailable; i++) {
-//                                byte tempByte = bytes[i];
-//                                // 개행문자를 기준으로 받음(한줄)
-//                                if(tempByte == '\n') {
-//                                    // readBuffer 배열을 encodedBytes로 복사
-//                                    byte[] encodedBytes = new byte[readBufferPosition];
-//                                    System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
-//                                    // 인코딩 된 바이트 배열을 문자열로 변환
-//                                    final String text = new String(encodedBytes, "US-ASCII");
-//                                    readBufferPosition = 0;
-//                                    handler.post(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            // 텍스트 뷰에 출력
-//                                            textV.append(text + "\n");
-//                                        }
-//                                    });
-//                                } // 개행 문자가 아닐 경우
-//                                else {
-//                                    readBuffer[readBufferPosition++] = tempByte;
-//                                }
-//                            }
-//                        }
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    try {
-//                        // 1초마다 받아옴
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
-//        workerThread.start();
-//    }
-
-
-
-
+    void setLayoutBySensorValue(double _hum, double _temp)
+    {
+        discomfortIndex = calculateDiscomfortIndex(_hum, _temp);
+        textV.setText("불쾌지수 : " + Double.toString(discomfortIndex));
+        humText.setText(Double.toString(_hum) + "%");
+        tempText.setText(Double.toString(_temp) + "°C");
+        if(discomfortIndex < 68) // 불쾌지수 낮음
+            textA.setText("전원 쾌적함을 느낍니다.");
+        else if(discomfortIndex <= 74) // 불쾌지수 보통
+            textA.setText("불쾌감을 나타내기 시작합니다");
+        else if(discomfortIndex <= 79) // 불쾌지수 보통
+            textA.setText("50%정도 불쾌감을 느낍니다.");
+        else // 불쾌지수 매우나쁨
+            textA.setText("전원 불쾌감을 느낍니다.");
+    }
     @Override
     public void onClick(View v)
     {
@@ -308,34 +262,14 @@ public class Thermometer extends AppCompatActivity implements View.OnClickListen
                 selectBluetoothDevice(); // 블루투스 디바이스 선택 함수 호출
             }
         }
-        else if(v.getId()==R.id.btnSend)
+        else if(v.getId()==R.id.btnSend) // 측정 버튼 누를 때
         {
-            textV.setText("시발");
-//            receiveData();
-            sendData("okay");
+            // 센서 값을 hum, temp에 저장
+            setLayoutBySensorValue(hum, temp);
+        }
+        else if(v.getId()==R.id.btnHome)
+        {
+            finish();
         }
     }
-
-
-
-
-
 }
-
-//        if(temp<10)
-//            thermometer.setImageResource(R.drawable.thermometer4);
-//        else if(temp<20)
-//            thermometer.setImageResource(R.drawable.thermometer3);
-//        else if(temp<30)
-//            thermometer.setImageResource(R.drawable.thermometer2);
-//        else
-//            thermometer.setImageResource(R.drawable.thermometer1);
-//
-//        if(hum<10)
-//            humiditymeter.setImageResource(R.drawable.humiditymeter1);
-//        else if(hum<20)
-//            humiditymeter.setImageResource(R.drawable.humiditymeter2);
-//        else if(hum<30)
-//            humiditymeter.setImageResource(R.drawable.humiditymeter3);
-//        else
-//            humiditymeter.setImageResource(R.drawable.humiditymeter4);

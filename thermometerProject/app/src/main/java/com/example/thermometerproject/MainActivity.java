@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnMeasure, btnFormula, btnLog, btnExit;
+    Button btnMeasure, btnFormula, btnExit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,11 +17,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnMeasure =(Button)findViewById(R.id.btnMeasure);
         btnFormula= (Button)findViewById(R.id.btnFormula);
-        btnLog= (Button)findViewById(R.id.btnLog);
         btnExit =(Button)findViewById(R.id.btnExit);
         btnMeasure.setOnClickListener((View.OnClickListener) this);
         btnFormula.setOnClickListener((View.OnClickListener) this);
-        btnLog.setOnClickListener((View.OnClickListener) this);
         btnExit.setOnClickListener((View.OnClickListener) this);
     }
 
