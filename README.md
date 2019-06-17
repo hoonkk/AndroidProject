@@ -1,6 +1,6 @@
 # AndroidProject
 아두이노와 온습도 센서를 이용한 아두이노 불쾌지수 측정기 프로젝트
-(Measuring Temperature Humidity Index With Arudino Uno / DHT11 Sensor
+- (Measuring Temperature Humidity Index With Arudino Uno / DHT11 Sensor)
 - 아두이노 우노를 이용한 불쾌지수 측정기 프로젝트
 - 온습도 측정 센서 : DHT11
 - 블루투스 통신 모듈 : HC-06
